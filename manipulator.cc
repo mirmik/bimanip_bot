@@ -19,32 +19,30 @@ struct Regulator
 	bool speed2_loop_enabled = true;
 	bool position_loop_enabled = true;
 
-	double speed_error = 0;
-	double position_error = 0;
+	double speed_error;
+	double position_error;
 
-	//double speed_target = 1;
+	double speed_target;
 	//double position_target = 45. / 180. * 3.14;
-	double speed_target = 0;
-	double position_target = 0;
+	double position_target;
 
-	double speed_integral = 0;
-	double position_integral = 0;
+	double speed_integral;
+	double position_integral;
 
-	double speed2_target = 0.3;
+	double speed2_target;
 
-	static constexpr double spd_K = 4;
-	static constexpr double spd_D = 8;
-	static constexpr double spd_W = 5;
+	static constexpr double spd_T = 0.5;
+	static constexpr double spd_ksi = 0.75;
+	static constexpr double spd_A = 100;
 
-	static constexpr double pos_K = 4;
-	static constexpr double pos_D = 12;
-	static constexpr double pos_W = 0.2;
+	static constexpr double pos_T = 0.75;
+	static constexpr double pos_ksi = 3;
 
-	double pos_kp = pos_K * pos_D;
-	double pos_ki = pos_K * pos_W * 0;
+	double pos_kp = 2.*pos_ksi/pos_T;
+	double pos_ki = 1./pos_T/pos_T;
 
-	double spd_kp = spd_K * spd_D;
-	double spd_ki = spd_W * spd_K;
+	double spd_kp = 2.*spd_ksi/spd_T*spd_A;
+	double spd_ki = 1./spd_T/spd_T*spd_A;
 
 	double force_compensation = 0.1;
 
@@ -55,13 +53,13 @@ struct Regulator
 		speed_error = 0;
 		position_error = 0;
 
-		speed_target = 0;
+		speed_target = 0.2;
 		position_target = 0;
 
 		speed_integral = 0;
 		position_integral = 0;
 
-		speed2_target = 0.05;
+		speed2_target = 0.1;
 	}
 };
 
@@ -196,7 +194,8 @@ namespace gazebo
 
 			int left = model->GetName() == "manip1";
 
-			double X = 0.7 + 0.05 * time;
+			linalg::vec<double, 2> position_target;
+			/*double X = 0.7 + 0.05 * time;
 			if (X > 1.3) X = 1.3;
 			linalg::vec<double, 2> position_target{left ? -0.35 : 0.35, X};
 
@@ -204,7 +203,12 @@ namespace gazebo
 			{
 				position_target = position_target+
 					linalg::vec<double,2> {sin(time/2)*0.3 ,- 0.2 + cos(time/2)*0.2};
-			}
+			}*/
+
+			//if (time < 5) 
+			//{
+				position_target = {left ? -1. : 1., 1};
+			//}
 
 			auto position_error = position_target - output_pose.translation();
 			position_error += linalg::vec<double,2>{global_force.x, 0} * 0.001;
@@ -273,6 +277,7 @@ namespace gazebo
 				    - reg->control_signal * 0.001;
 			}
 
+			PRINT(reg->speed_target);
 			reg->speed_error = reg->speed_target - current_speed;
 			reg->speed_integral += reg->speed_error * delta;
 			reg->control_signal =

@@ -26,7 +26,7 @@
     </model>
 
     <model name="cargo">
-      <pose>0 0 0.9 0 0 0</pose>
+      <pose>0 3 0.9 0 0 0</pose>
 
       <link name="l0">
         <collision name="c0">  
