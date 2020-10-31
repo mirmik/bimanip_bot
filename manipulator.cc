@@ -14,6 +14,9 @@
 
 #include <igris/math.h>
 
+extern rabbit::screw2<double> CARGO_TARGET_VELOCITY;
+extern rabbit::htrans2<double> CARGO_POSITION;
+
 struct Regulator
 {
 	bool speed2_loop_enabled = true;
@@ -31,12 +34,12 @@ struct Regulator
 
 	double speed2_target;
 
-	static constexpr double spd_T = 0.5;
+	static constexpr double spd_T = 0.03;
 	static constexpr double spd_ksi = 0.75;
-	static constexpr double spd_A = 100;
+	static constexpr double spd_A = 9;
 
-	static constexpr double pos_T = 0.75;
-	static constexpr double pos_ksi = 3;
+	static constexpr double pos_T = 0.15;
+	static constexpr double pos_ksi = 2;
 
 	double pos_kp = 2.*pos_ksi/pos_T;
 	double pos_ki = 1./pos_T/pos_T;
@@ -44,7 +47,7 @@ struct Regulator
 	double spd_kp = 2.*spd_ksi/spd_T*spd_A;
 	double spd_ki = 1./spd_T/spd_T*spd_A;
 
-	double force_compensation = 0.1;
+	//double force_compensation = 0.1;
 
 	double control_signal = 0;
 
@@ -65,9 +68,12 @@ struct Regulator
 
 namespace gazebo
 {
+	extern physics::WorldPtr WORLD;
+
 	class ModelPush : public ModelPlugin
 	{
 	private:
+		double ForceKoeff = 0.001;
 		// Pointer to the model
 		physics::ModelPtr model;
 
@@ -79,24 +85,27 @@ namespace gazebo
 		Regulator joint0_regulator;
 		Regulator joint1_regulator;
 
-		std::chrono::microseconds lasttime;
-		std::chrono::microseconds starttime;
+		double lasttime;
+		double starttime;
 		double delta;
 
 	public:
+
+		double evaltime() 
+		{
+			auto t = WORLD->SimTime();
+
+			return (double)t.sec + (double)t.nsec / 1000000000.;
+		}
 
 		void Reset()
 		{
 			joint0_regulator.reset();
 			joint1_regulator.reset();
 
-			lasttime =
-			    std::chrono::time_point_cast<std::chrono::microseconds>(
-			        std::chrono::high_resolution_clock::now()).time_since_epoch();
+			lasttime = evaltime();
 
-			starttime =
-			    std::chrono::time_point_cast<std::chrono::microseconds>(
-			        std::chrono::high_resolution_clock::now()).time_since_epoch();
+			starttime = evaltime();
 
 			if (model->GetName() == "manip1")
 			{
@@ -122,6 +131,7 @@ namespace gazebo
 
 		void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 		{
+			nos::println("Load manipulator");
 			// Store the pointer to the model
 			this->model = _parent;
 
@@ -139,12 +149,9 @@ namespace gazebo
 		linalg::vec<double,2> position_integral {};
 		void OnUpdate()
 		{
-			std::chrono::microseconds curtime =
-			    std::chrono::time_point_cast<std::chrono::microseconds>(
-			        std::chrono::high_resolution_clock::now()).time_since_epoch();
-			delta = (double)((curtime - lasttime).count()) / 1000000;
-
-			double time = (curtime - starttime).count() / 1000000;
+			double curtime = evaltime();
+			delta = curtime - lasttime;
+			double time = curtime - starttime;			
 
 			if (!inited)
 			{
@@ -195,31 +202,41 @@ namespace gazebo
 			int left = model->GetName() == "manip1";
 
 			linalg::vec<double, 2> position_target;
-			/*double X = 0.7 + 0.05 * time;
+			
+			double X = 0.45 + 0.05 * time;
 			if (X > 1.3) X = 1.3;
-			linalg::vec<double, 2> position_target{left ? -0.35 : 0.35, X};
+			position_target = {left ? -0.35 : 0.35, X};
 
-			if (time > 10) 
+			
+			if (time < 5) 
 			{
-				position_target = position_target+
-					linalg::vec<double,2> {sin(time/2)*0.3 ,- 0.2 + cos(time/2)*0.2};
-			}*/
-
-			//if (time < 5) 
-			//{
-				position_target = {left ? -1. : 1., 1};
-			//}
+				position_target = {left ? -1. : 1., 1.2};
+			}
 
 			auto position_error = position_target - output_pose.translation();
-			position_error += linalg::vec<double,2>{global_force.x, 0} * 0.001;
+			position_error += linalg::vec<double,2>{global_force.x, 0} * ForceKoeff;
 			
 			position_integral += position_error * delta;
 
-			linalg::vec<double, 2> target = 
+			linalg::vec<double, 2> target;	
+			if (time < 10) 
+			{
+				target = 
 				1 * position_error +
 				0.05 * position_integral 
-				+ global_force * 0.001;
-			;
+				+ global_force * ForceKoeff;
+			}
+			else {
+				auto to_cargo = CARGO_POSITION.center - output_pose.center;
+
+				target = 
+					to_cargo * 0.1 +
+					CARGO_TARGET_VELOCITY.kinematic_carry(to_cargo).lin
+					+ global_force * ForceKoeff;
+
+				//nos::println(CARGO_TARGET_VELOCITY.kinematic_carry(-to_cargo).lin);
+			}
+
 
 
 			linalg::vec<double, 2> vectors[2] = { joint0_sens.lin, joint1_sens.lin };
@@ -247,8 +264,8 @@ namespace gazebo
 
 			if (model->GetName() == "manip1")
 			{
-				nos::println(model->GetName());
-				nos::println(force1.X(), force1.Y(), force1.Z(), global_force);
+				//nos::println(model->GetName(), delta);
+				//nos::println(force1.X(), force1.Y(), force1.Z(), global_force);
 			}
 
 			Control(model->GetJoint("joint0"), &joint0_regulator);
@@ -274,10 +291,9 @@ namespace gazebo
 				reg->speed_target =
 				    reg->pos_kp * reg->position_error +
 				    reg->pos_ki * reg->position_integral 
-				    - reg->control_signal * 0.001;
+				    - reg->control_signal * ForceKoeff;
 			}
 
-			PRINT(reg->speed_target);
 			reg->speed_error = reg->speed_target - current_speed;
 			reg->speed_integral += reg->speed_error * delta;
 			reg->control_signal =

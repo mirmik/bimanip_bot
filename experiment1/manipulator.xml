@@ -1,0 +1,17 @@
+<link name="link">
+  <collision name="collision">
+    <geometry>
+      <box>
+        <size>1 1 1</size>
+      </box>
+    </geometry>
+  </collision>
+
+  <visual name="visual">
+    <geometry>
+      <box>
+        <size>1 1 1</size>
+      </box>
+    </geometry>
+  </visual>
+</link>

@@ -26,7 +26,7 @@
     </model>
 
     <model name="cargo">
-      <pose>0 3 0.9 0 0 0</pose>
+      <pose>0 0 0.9 0 0 0</pose>
 
       <link name="l0">
         <collision name="c0">  
@@ -58,6 +58,7 @@
           <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
         </visual>
       </link>
+      <plugin name="cargo" filename="libcargo.so"/>
     </model>
 
     <model name="manip1">

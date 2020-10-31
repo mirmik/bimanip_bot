@@ -53,6 +53,7 @@ CMAKE_BINARY_DIR = /home/mirmik/project/rgazebo
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/cargo.dir/all
 all: CMakeFiles/manipulator.dir/all
 all: CMakeFiles/world.dir/all
 
@@ -64,10 +65,38 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/cargo.dir/clean
 clean: CMakeFiles/manipulator.dir/clean
 clean: CMakeFiles/world.dir/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/cargo.dir
+
+# All Build rule for target.
+CMakeFiles/cargo.dir/all:
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/depend
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mirmik/project/rgazebo/CMakeFiles --progress-num=1,2 "Built target cargo"
+.PHONY : CMakeFiles/cargo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/cargo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mirmik/project/rgazebo/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cargo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mirmik/project/rgazebo/CMakeFiles 0
+.PHONY : CMakeFiles/cargo.dir/rule
+
+# Convenience name for target.
+cargo: CMakeFiles/cargo.dir/rule
+
+.PHONY : cargo
+
+# clean rule for target.
+CMakeFiles/cargo.dir/clean:
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/clean
+.PHONY : CMakeFiles/cargo.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/manipulator.dir
@@ -76,7 +105,7 @@ clean: CMakeFiles/world.dir/clean
 CMakeFiles/manipulator.dir/all:
 	$(MAKE) -f CMakeFiles/manipulator.dir/build.make CMakeFiles/manipulator.dir/depend
 	$(MAKE) -f CMakeFiles/manipulator.dir/build.make CMakeFiles/manipulator.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mirmik/project/rgazebo/CMakeFiles --progress-num=1,2 "Built target manipulator"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mirmik/project/rgazebo/CMakeFiles --progress-num=3,4 "Built target manipulator"
 .PHONY : CMakeFiles/manipulator.dir/all
 
 # Build rule for subdir invocation for target.
@@ -103,7 +132,7 @@ CMakeFiles/manipulator.dir/clean:
 CMakeFiles/world.dir/all:
 	$(MAKE) -f CMakeFiles/world.dir/build.make CMakeFiles/world.dir/depend
 	$(MAKE) -f CMakeFiles/world.dir/build.make CMakeFiles/world.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mirmik/project/rgazebo/CMakeFiles --progress-num=3,4 "Built target world"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mirmik/project/rgazebo/CMakeFiles --progress-num=5,6 "Built target world"
 .PHONY : CMakeFiles/world.dir/all
 
 # Build rule for subdir invocation for target.

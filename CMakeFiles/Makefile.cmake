@@ -182,6 +182,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/cargo.dir/DependInfo.cmake"
   "CMakeFiles/manipulator.dir/DependInfo.cmake"
   "CMakeFiles/world.dir/DependInfo.cmake"
   )

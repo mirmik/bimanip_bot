@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named cargo
+
+# Build rule for target.
+cargo: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cargo
+.PHONY : cargo
+
+# fast build rule for target.
+cargo/fast:
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/build
+.PHONY : cargo/fast
+
+#=============================================================================
 # Target rules for targets named manipulator
 
 # Build rule for target.
@@ -135,6 +148,33 @@ world: cmake_check_build_system
 world/fast:
 	$(MAKE) -f CMakeFiles/world.dir/build.make CMakeFiles/world.dir/build
 .PHONY : world/fast
+
+cargo.o: cargo.cc.o
+
+.PHONY : cargo.o
+
+# target to build an object file
+cargo.cc.o:
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/cargo.cc.o
+.PHONY : cargo.cc.o
+
+cargo.i: cargo.cc.i
+
+.PHONY : cargo.i
+
+# target to preprocess a source file
+cargo.cc.i:
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/cargo.cc.i
+.PHONY : cargo.cc.i
+
+cargo.s: cargo.cc.s
+
+.PHONY : cargo.s
+
+# target to generate assembly for a file
+cargo.cc.s:
+	$(MAKE) -f CMakeFiles/cargo.dir/build.make CMakeFiles/cargo.dir/cargo.cc.s
+.PHONY : cargo.cc.s
 
 manipulator.o: manipulator.cc.o
 
@@ -198,8 +238,12 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... cargo"
 	@echo "... manipulator"
 	@echo "... world"
+	@echo "... cargo.o"
+	@echo "... cargo.i"
+	@echo "... cargo.s"
 	@echo "... manipulator.o"
 	@echo "... manipulator.i"
 	@echo "... manipulator.s"
