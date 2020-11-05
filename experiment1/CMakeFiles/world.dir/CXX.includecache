@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/mirmik/project/rgazebo/world.cc
+/home/mirmik/project/rgazebo/experiment1/world.cc
 gazebo/gazebo.hh
 -
 nos/print.h

@@ -1,0 +1,5 @@
+/home/mirmik/project/rgazebo/experiment4/CMakeFiles/rebuild_cache.dir
+/home/mirmik/project/rgazebo/experiment4/CMakeFiles/edit_cache.dir
+/home/mirmik/project/rgazebo/experiment4/CMakeFiles/cargo.dir
+/home/mirmik/project/rgazebo/experiment4/CMakeFiles/manipulator.dir
+/home/mirmik/project/rgazebo/experiment4/CMakeFiles/world.dir

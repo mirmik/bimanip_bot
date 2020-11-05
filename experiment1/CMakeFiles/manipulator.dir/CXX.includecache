@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/mirmik/project/rgazebo/manipulator.cc
+/home/mirmik/project/rgazebo/experiment1/manipulator.cc
 functional
 -
 gazebo/gazebo.hh

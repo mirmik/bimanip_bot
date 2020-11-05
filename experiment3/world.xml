@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="default">
+    <plugin name="world" filename="libworld.so"/>
+    <gravity>0 0 -9.81</gravity>
+  
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+
+    <model name="stuff">
+      <pose>0 0 0.3 0 0 0</pose>
+      <link name="l0">
+        <collision name="c0">  
+          <geometry><box><size>1 1 0.6</size></box></geometry>
+        </collision>
+        <visual name="v0">  
+          <geometry><box><size>1 1 0.6</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cargo">
+      <pose>0 0 0.9 0 0 0</pose>
+
+      <link name="l0">
+        <collision name="c0">  
+          <geometry><box><size>0.3 0.3 0.25</size></box></geometry>
+        </collision>
+
+        <visual name="v0">  
+          <geometry><box><size>0.3 0.3 0.25</size></box></geometry>
+        </visual>
+
+        <collision name="c1">  
+          <pose> 0 0 0.175 0 0 0 </pose>
+          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
+        </collision>
+
+        <visual name="v1">  
+          <pose> 0 0 0.175 0 0 0 </pose>
+          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
+        </visual>
+
+
+        <collision name="c2">  
+          <pose> 0 0 -0.175 0 0 0 </pose>
+          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
+        </collision>
+
+        <visual name="v2">  
+          <pose> 0 0 -0.175 0 0 0 </pose>
+          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
+        </visual>
+      </link>
+      <plugin name="cargo" filename="libcargo.so"/>
+    </model>
+
+    <model name="manip1">
+      <pose>-1 0 0.2 0 0 0</pose>
+
+      <link name="link_0">
+        <collision name="collision_0_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+            	<radius>0.15</radius>
+            </sphere>    
+          </geometry>
+        </collision>
+
+        <visual name="visual_0_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+            	<radius>0.15</radius>
+            </sphere>    
+          </geometry>
+        </visual>
+      </link>
+
+      <link name="link_1">
+        <collision name="collision_1_0">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry>
+            <cylinder>
+            	<radius>0.1</radius>
+            	<length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+
+        <visual name="visual_1_0">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry>
+            <cylinder>
+            	<radius>0.1</radius>
+            	<length>0.8</length>
+            </cylinder>
+          </geometry>
+        </visual>
+
+		<collision name="collision_1_1">
+          <pose>0 0 0.8 0 0 0</pose>
+          <geometry>
+            <sphere>
+            	<radius>0.15</radius>
+            </sphere>          
+          </geometry>
+        </collision>
+
+        <visual name="visual_1_1">
+          <pose>0 0 0.8 0 0 0</pose>
+          <geometry>
+            <sphere>
+            	<radius>0.15</radius>
+            </sphere>
+          </geometry>
+        </visual>
+
+        <inertial>
+        	<pose>0 0 0.4 0 0 0</pose>
+        </inertial>
+      </link>
+
+      <link name="link_2">
+        <collision name="collision_2_0">
+          <pose>0 0 1.2 0 0 0</pose>
+          <geometry>
+            <cylinder>
+            	<radius>0.1</radius>
+            	<length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+
+        <visual name="visual_2_0">
+          <pose>0 0 1.2 0 0 0</pose>
+          <geometry>
+            <cylinder>
+            	<radius>0.1</radius>
+            	<length>0.8</length>
+            </cylinder>
+          </geometry>
+        </visual>
+
+        <inertial>
+        	<pose>0 0 1.2 0 0 0</pose>
+        </inertial>
+
+      </link>
+
+      <link name="link_3">
+        <collision name="collision_2_1">
+          <pose>0 0 1.6 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>          
+          </geometry>
+        </collision>
+
+        <visual name="visual_2_1">
+          <pose>0 0 1.6 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>
+          </geometry>
+        </visual>
+
+        <inertial>
+          <pose>0 0 1.6 0 0 0</pose>
+        </inertial>
+
+      </link>
+
+
+
+      <joint name="_joint_" type="fixed">
+      	 <pose> 0 0 0 0 0 0 </pose>
+         <parent>world</parent>
+         <child>link_0</child>
+      </joint>
+
+      <joint name="joint0" type="revolute">
+      	 <pose> 0 0 0 0 0 0 </pose>
+         <parent>link_0</parent>
+         <child>link_1</child>
+         <axis>
+         	<xyz>0 1 0</xyz>
+	        <use_parent_model_frame>true</use_parent_model_frame></axis>
+      </joint>
+
+      <joint name="joint1" type="revolute">
+      	 <pose> 0 0 0.8 0 0 0 </pose>
+         <parent>link_1</parent>
+         <child>link_2</child>
+         <axis>
+          <xyz>0 1 0</xyz>
+	        <use_parent_model_frame>true</use_parent_model_frame>
+         </axis>
+      </joint>
+
+      <joint name="joint2" type="fixed">
+         <pose> 0 0 1.6 0 0 0 </pose>
+         <parent>link_2</parent>
+         <child>link_3</child>
+      </joint>
+
+      <plugin name="manip1" filename="libmanipulator.so"/>
+    </model>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <model name="manip2">
+      <pose>1 0 0.2 0 0 0</pose>
+
+      <link name="link_0">
+        <collision name="collision_0_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>    
+          </geometry>
+        </collision>
+
+        <visual name="visual_0_0">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>    
+          </geometry>
+        </visual>
+      </link>
+
+      <link name="link_1">
+        <collision name="collision_1_0">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+
+        <visual name="visual_1_0">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </visual>
+
+    <collision name="collision_1_1">
+          <pose>0 0 0.8 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>          
+          </geometry>
+        </collision>
+
+        <visual name="visual_1_1">
+          <pose>0 0 0.8 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>
+          </geometry>
+        </visual>
+
+        <inertial>
+          <pose>0 0 0.4 0 0 0</pose>
+        </inertial>
+      </link>
+
+      <link name="link_2">
+        <collision name="collision_2_0">
+          <pose>0 0 1.2 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+
+        <visual name="visual_2_0">
+          <pose>0 0 1.2 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.1</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </visual>
+      </link>
+
+
+      <link name="link_3">
+        <collision name="collision_2_1">
+          <pose>0 0 1.6 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>          
+          </geometry>
+        </collision>
+
+        <visual name="visual_2_1">
+          <pose>0 0 1.6 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.15</radius>
+            </sphere>
+          </geometry>
+        </visual>
+
+        <inertial>
+          <pose>0 0 1.6 0 0 0</pose>
+        </inertial>
+
+      </link>
+
+
+      <joint name="_joint_" type="fixed">
+         <pose> 0 0 0 0 0 0 </pose>
+         <parent>world</parent>
+         <child>link_0</child>
+      </joint>
+
+      <joint name="joint0" type="revolute">
+         <pose> 0 0 0 0 0 0 </pose>
+         <parent>link_0</parent>
+         <child>link_1</child>
+         <axis>
+          <xyz>0 1 0</xyz>
+          <use_parent_model_frame>true</use_parent_model_frame></axis>
+      </joint>
+
+      <joint name="joint1" type="revolute">
+         <pose> 0 0 0.8 0 0 0 </pose>
+         <parent>link_1</parent>
+         <child>link_2</child>
+         <axis>
+          <xyz>0 1 0</xyz>
+          <use_parent_model_frame>true</use_parent_model_frame></axis>
+      </joint>
+
+      <joint name="joint2" type="fixed">
+         <pose> 0 0 1.6 0 0 0 </pose>
+         <parent>link_2</parent>
+         <child>link_3</child>
+      </joint>
+
+      <plugin name="manip2" filename="libmanipulator.so"/>
+    </model>
+
+
+
+
+  </world>
+</sdf>
